@@ -1,0 +1,10 @@
+hyphenated-word,3,18.75
+test,3,18.75
+word,3,18.75
+comma,1,6.25
+list,1,6.25
+parenthetical,1,6.25
+quoted,1,6.25
+remarks,1,6.25
+separated,1,6.25
+words,1,6.25
