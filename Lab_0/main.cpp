@@ -1,88 +1,40 @@
 #include <iostream>
-#include <string>
 #include <fstream>
-#include <map>
 #include <vector>
-#include <algorithm>
+#include <gtest/gtest.h>
+#include "csv_parser.h"
 
-class words {
-public:
-    std::string word;
-    std::ifstream infile;
-    std::string str;
-    int pos = 0;
+std::vector<std::string> read_words(std::string in) {
+    std::vector<std::string> word;
+    words token;
+    token.infile.open(in);
+    while (!token.read()) {
+        word.push_back(token.word);
+    }
+    return word;
+}
 
-    int read() {
-        word = "";
-        while (pos >= str.size()) {
-            if (!std::getline(infile, str)) {
-                return 1;
-            }
-            str.push_back(' ');
-            pos = 0;
-        }
-        while (pos < str.size() && check_end(str[pos])) {
-            pos++;
-            if (pos >= str.size()) {
-                return read();
-            }
-        }
-        if (pos >= str.size()) {
-            return 1;
-        }
-        while (pos < str.size() && !check_end(str[pos])) {
-            word += std::tolower(str[pos]);
-            pos++;
-        }
-        return 0;
+TEST(read_func, test1) {
+    std::vector<std::string> good_res = {
+        "hello",
+        "world",
+        "apple",
+        "cube",
+        "test",
+        "words"
+    };
+    std::vector<std::string> result = read_words("in1.txt");
+
+    ASSERT_EQ(good_res.size(), result.size()) << "Не совпадает количество слов";
+
+    for (int i = 0; i < result.size(); i++) {
+        ASSERT_EQ(good_res[i], result[i]) << "Не совпадение слова №" << i;
     }
 
-private:
-    int check_end(char symbol) {
-        return symbol == '.' || symbol == ',' || symbol == ' ' || symbol == '!' || symbol == '?';
-    }
-};
-
-struct stats {
-    std::string word;
-    int count;
-    float frequency;
-};
-
-int compair(stats& a, stats& b) {
-    return a.count > b.count;
 }
 
 
-int main(int count_arg, char *arg[]) {
-    using namespace std;
-    if (count_arg != 3) {
-        cout << "Передайте in.txt out.csv" << endl;
-        return 1;
-    }
-    words word;
-    word.infile.open(arg[1]);
-    ofstream outfile(arg[2]);
-    if (!word.infile.is_open() || !outfile.is_open()) {
-        return 2;
-    }
-    map<string, int> count_word;
-    int count = 0;
-    while (!word.read()) {
-        count++;
-        count_word[word.word]++;
-    }
-    vector<stats> result;
-    for (auto &pair: count_word) {
-        stats unit;
-        unit.word = pair.first;
-        unit.count = pair.second;
-        unit.frequency = ((float)unit.count / (float)count) * 100;
-        result.push_back(unit);
-    }
-    sort(result.begin(), result.end(), compair);
-    for (int i = 0; i < result.size(); i++) {
-        outfile << result[i].word << ',' << result[i].count << ',' << result[i].frequency << endl;
-    }
-    return 0;
+int main() {
+    ::testing::InitGoogleTest();
+    return RUN_ALL_TESTS();
 }

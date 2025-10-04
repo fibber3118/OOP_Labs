@@ -1,9 +1,14 @@
-cmake_minimum_required(VERSION 4.0)
-project(untitled)
+cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_STANDARD 20)
+project(Lab_0 CXX)
 
-add_executable(untitled main.cpp)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-arcs -ftest-coverage")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
+find_package(GTest REQUIRED)
+
+add_executable(Lab_0
+        main.cpp
+        csv_parser.cpp
+)
+
+target_link_libraries(Lab_0
+        GTest::gtest_main
+)
