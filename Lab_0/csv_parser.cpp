@@ -1,56 +1,18 @@
-#include <iostream>
 #include <string>
 #include <fstream>
 #include <map>
 #include <vector>
 #include <algorithm>
+#include "Words.h"
 
-class Words {
-public:
-    std::string word;
-    std::ifstream infile;
-    std::string str;
-    int pos = 0;
 
-    int read() {
-        word = "";
-        while (pos >= str.size()) {
-            if (!std::getline(infile, str)) {
-                return 1;
-            }
-            str.push_back(' ');
-            pos = 0;
-        }
-        while (pos < str.size() && check_end(str[pos])) {
-            pos++;
-            if (pos >= str.size()) {
-                return read();
-            }
-        }
-        if (pos >= str.size()) {
-            return 1;
-        }
-        while (pos < str.size() && !check_end(str[pos])) {
-            word += std::tolower(str[pos]);
-            pos++;
-        }
-        return 0;
-    }
-
-private:
-    int check_end(char symbol) {
-        return symbol == '.' || symbol == ',' || symbol == ' ' || symbol == '!' || symbol == '?' || symbol == '"' ||
-            symbol == ';' || symbol == ':' || symbol == '('|| symbol == ')';
-    }
-};
-
-struct Stats {
+struct Word_data {
     std::string word;
     int count;
     float frequency;
 };
 
-int compare(Stats& a, Stats& b) {
+int compare(Word_data& a, Word_data& b) {
     return a.count > b.count;
 }
 
@@ -67,9 +29,9 @@ int calc_words(std::string in, std::string out) {
         count++;
         count_word[Word.word]++;
     }
-    std::vector<Stats> result;
+    std::vector<Word_data> result;
     for (auto &pair: count_word) {
-        Stats unit;
+        Word_data unit;
         unit.word = pair.first;
         unit.count = pair.second;
         unit.frequency = ((int)(((float)unit.count / (float)count) * 10000))/100.0;
