@@ -1,4 +1,4 @@
-
+#include "BitArray.h"
 
 
 int main() {
