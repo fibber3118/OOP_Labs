@@ -330,14 +330,6 @@ namespace bitarray {
         }
         int word_idx = i / BITS_IN_WORD;
         int bit_pos = i % BITS_IN_WORD;
-        int used_bits_in_word;
-      /*  if (word_idx + 1 == array.size()) {
-            used_bits_in_word = BITS_IN_WORD - num_bits_free;
-        }else {
-            used_bits_in_word = BITS_IN_WORD;
-        }
-        return (array[word_idx] & (1UL << (used_bits_in_word - bit_pos - 1)));
-        */
         return (array[word_idx] & (1UL << bit_pos));
     }
 

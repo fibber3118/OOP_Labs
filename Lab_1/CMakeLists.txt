@@ -6,14 +6,14 @@ project(Lab_1 CXX)
 find_package(GTest CONFIG REQUIRED)
 
 add_executable(Lab_1
-        main.cpp
-        BitArray.cpp
-        BitArray.h)
+        src/main.cpp
+        src/BitArray.cpp
+        src/BitArray.h)
 
 add_executable(Lab_1_test
-        bit_array_test.cpp
-        BitArray.cpp
-        BitArray.h)
+        src/bit_array_test.cpp
+        src/BitArray.cpp
+        src/BitArray.h)
 
 target_link_libraries(Lab_1_test
         GTest::gtest_main
