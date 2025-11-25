@@ -13,6 +13,11 @@ Move TFT::next_Move(int strategy_number, const std::vector<std::vector<Move> > &
     return Move::D;
 }
 
+std::string TFT::getName() {
+    return "TFT";
+}
+
+
 namespace {
     Strategy* create() {
         return new TFT;

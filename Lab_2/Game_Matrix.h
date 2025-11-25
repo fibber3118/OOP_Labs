@@ -1,4 +1,7 @@
 #include <vector>
+#include <fstream>
+#include <stdexcept>
+#include <iostream>
 #include "Strategy.h"
 #ifndef LAB_2_GAME_MATRIX_H
 #define LAB_2_GAME_MATRIX_H
@@ -9,7 +12,7 @@ class Game_Matrix {
 public:
     std::vector<int> results;
 
-    Game_Matrix();
+    Game_Matrix(const std::string filename);
 
     void get_result(std::vector<Move>& choices);
 

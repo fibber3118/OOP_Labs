@@ -7,6 +7,12 @@ Move Friendly_Strategy::next_Move(int strategy_number, const std::vector<std::ve
     return Move::C;
 }
 
+std::string Friendly_Strategy::getName() {
+    return "Friendly";
+}
+
+
+
 namespace {
     Strategy* create() {
         return new Friendly_Strategy;

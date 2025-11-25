@@ -9,6 +9,7 @@
 class TFT : public Strategy {
 public:
     Move next_Move(int strategy_number, const std::vector<std::vector<Move> > &history) override;
+    std::string getName() override;
 };
 
 

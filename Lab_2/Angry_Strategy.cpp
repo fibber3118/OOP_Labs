@@ -5,6 +5,11 @@ Move Angry_Strategy::next_Move(int strategy_number, const std::vector<std::vecto
     return Move::D;
 }
 
+std::string Angry_Strategy::getName() {
+    return "Angry";
+}
+
+
 namespace {
     Strategy* create() {
         return new Angry_Strategy;
