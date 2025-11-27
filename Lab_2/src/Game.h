@@ -1,8 +1,9 @@
 #include <vector>
 #include <string>
+#include <iostream>
+#include <algorithm>
+#include "Game_Matrix.h"
 #include "Strategy_Factory.h"
-#include "Friendly_Strategy.h"
-#include "Angry_Strategy.h"
 #include "Strategy.h"
 
 #ifndef LAB_2_GAME_H

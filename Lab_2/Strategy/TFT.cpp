@@ -6,16 +6,13 @@ Move TFT::next_Move(int strategy_number, const std::vector<std::vector<Move> > &
     }
     std::vector<Move> last_step = history[history.size() - 1];
     for (int i = 0; i < 3; i++) {
-        if (last_step[i] == Move::C && i != strategy_number) {
-            return Move::C;
+        if (last_step[i] == Move::D && i != strategy_number) {
+            return Move::D;
         }
     }
-    return Move::D;
+    return Move::C;
 }
 
-std::string TFT::getName() {
-    return "TFT";
-}
 
 
 namespace {

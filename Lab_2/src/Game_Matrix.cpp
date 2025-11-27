@@ -27,7 +27,7 @@ Game_Matrix::Game_Matrix(const std::string filename) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 3; j++) {
                 if (!(file >> matrix[i][j])) {
-                    throw std::runtime_error("Ошибка файла матрицы (ожидается 8 строк по 3 числа)");
+                    throw std::runtime_error("Ошибка в файле");
                 }
             }
         }

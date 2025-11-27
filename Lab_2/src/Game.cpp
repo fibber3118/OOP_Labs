@@ -1,9 +1,4 @@
 #include "Game.h"
-#include <iostream>
-#include <algorithm>
-#include "Game_Matrix.h"
-#include "Strategy_Factory.h"
-#include "Strategy.h"
 
 std::vector<std::string> processing_input(int argc, char *arg[], std::string &mode, std::string &step,
                                           std::string &matrix_file) {
@@ -63,11 +58,10 @@ void match(std::vector<std::unique_ptr<Strategy> > &players, std::vector<int> &s
         if (detailed) {
             std::cout << score[0] << ' ' << score[1] << ' ' << score[2];
             std::cin.get();
-        } else if (!detailed && count_step < 20) {
+        }else{
             std::cout << score[0] << ' ' << score[1] << ' ' << score[2] << std::endl;
         }
     }
-    std::cout << score[0] << ' ' << score[1] << ' ' << score[2] << std::endl;
 }
 
 struct StrategyScore {
@@ -81,23 +75,22 @@ struct StrategyScore {
 
 void tournament(const std::vector<std::string> &strategy_list, int count_step, Game_Matrix &matrix) {
     if (strategy_list.size() < 3) {
-        std::cerr << "Ошибка: Для турнира требуется минимум 3 стратегии." << std::endl;
+        std::cerr << "Для турнира требуется минимум 3 стратегии." << std::endl;
         return;
     }
     std::vector<int> total_scores(strategy_list.size(), 0);
-    std::cout << "=== НАЧАЛО ТУРНИРА ===" << std::endl;
-    for (size_t i = 0; i < strategy_list.size(); ++i) {
-        for (size_t j = i + 1; j < strategy_list.size(); ++j) {
-            for (size_t k = j + 1; k < strategy_list.size(); ++k) {
+    for (size_t i = 0; i < strategy_list.size(); i++) {
+        for (size_t j = i + 1; j < strategy_list.size(); j++) {
+            for (size_t k = j + 1; k < strategy_list.size(); k++) {
                 std::vector<std::string> current_names = {strategy_list[i], strategy_list[j], strategy_list[k]};
                 std::vector<int> match_score(3, 0);
 
                 try {
                     auto players = create_players(current_names);
-                    std::cout << "Матч: "
+                    std::cout << "\n" << "Матч: "
                             << strategy_list[i] << " vs "
                             << strategy_list[j] << " vs "
-                            << strategy_list[k] << " -> ";
+                            << strategy_list[k] << std::endl;
 
                     match(players, match_score, false, count_step, matrix);
 
@@ -114,7 +107,7 @@ void tournament(const std::vector<std::string> &strategy_list, int count_step, G
         }
     }
     std::vector<StrategyScore> final_results;
-    for (size_t i = 0; i < strategy_list.size(); ++i) {
+    for (size_t i = 0; i < strategy_list.size(); i++) {
         final_results.push_back({strategy_list[i], total_scores[i]});
     }
     std::sort(final_results.begin(), final_results.end(), [](const StrategyScore &a, const StrategyScore &b) {
@@ -122,7 +115,7 @@ void tournament(const std::vector<std::string> &strategy_list, int count_step, G
     });
     std::cout << "\nИтог" << std::endl;
     for (const auto &res: final_results) {
-        std::cout << res.name << ": " << res.score << " очков" << std::endl;
+        std::cout << res.name << ": " << res.score << std::endl;
     }
     std::cout << "Победитель: " << final_results[0].name << std::endl;
 }
@@ -167,6 +160,5 @@ void game(int argc, char *arg[]) {
 
         std::vector<int> score(3, 0);
         match(players, score, mode == "detailed", count_step, matrix);
-        std::cout << "Результат: " << score[0] << ' ' << score[1] << ' ' << score[2] << std::endl;
     }
 }
