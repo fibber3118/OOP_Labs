@@ -14,53 +14,57 @@ void convert(
     const std::string &config_file,
     const std::string &output_file,
     const std::vector<std::string> &input_files) {
+
     if (input_files.empty()) {
         throw std::invalid_argument("Не задан входной WAV-файл.");
     }
+
     ConfigParser parser(config_file, input_files);
     std::string current_input_file = input_files[0];
-    std::string temp_file = "";
+    std::vector<std::string> temp_files_to_cleanup;
     int command_index = 0;
-    while (true) {
-        std::vector<std::string> command = parser.get_command();
-        if (command.empty()) {
-            break;
-        }
-        std::string converter_name = command[0];
-        std::string args_string;
-        for (size_t i = 1; i < command.size(); ++i) {
-            args_string += command[i];
-            if (i < command.size() - 1) {
-                args_string += " ";
+
+    try {
+        while (true) {
+            std::vector<std::string> command = parser.get_command();
+            if (command.empty()) {
+                break;
             }
-        }
-        std::string current_output_file;
-        if (parser.is_last_command()) {
-            current_output_file = output_file;
-        } else {
-            command_index++;
-            current_output_file = TEMP_FILE + std::to_string(command_index);
-        }
-        std::unique_ptr<Converter> converter = Factory_Converter::getInstance()->create_converter(converter_name);
-        if (!converter) {
-            throw std::runtime_error("Неизвестный конвертер: " + converter_name);
-        }
-        try {
+
+            std::string converter_name = command[0];
+            std::string args_string;
+            for (size_t i = 1; i < command.size(); i++) {
+                args_string += command[i] + (i < command.size() - 1 ? " " : "");
+            }
+
+            std::string current_output_file;
+            bool last_step = parser.is_last_command();
+
+            if (last_step) {
+                current_output_file = output_file;
+            } else {
+                command_index++;
+                current_output_file = TEMP_FILE + "_" + std::to_string(command_index) + ".wav";
+                temp_files_to_cleanup.push_back(current_output_file);
+            }
+
+            std::unique_ptr<Converter> converter = Factory_Converter::getInstance()->create_converter(converter_name);
+            if (!converter) {
+                throw std::runtime_error("Неизвестный конвертер: " + converter_name);
+            }
             WAV_Reader in_stream(current_input_file);
-            WAV_Writer out_stream(current_output_file);
-            converter->convert(in_stream, out_stream, args_string);
-            out_stream.close();
-        } catch (const std::exception &e) {
-            throw std::runtime_error("Ошибка при выполнении конвертера " + converter_name + ": " + e.what());
+                WAV_Writer out_stream(current_output_file);
+                converter->convert(in_stream, out_stream, args_string);
+            current_input_file = current_output_file;
         }
-        if (!temp_file.empty() && temp_file.rfind(TEMP_FILE, 0) == 0) {
-            std::remove(temp_file.c_str());
+    } catch (const std::exception &e) {
+        for (const auto &file : temp_files_to_cleanup) {
+            std::remove(file.c_str());
         }
-        temp_file = current_input_file;
-        current_input_file = current_output_file;
+        throw; // Пробрасываем ошибку дальше
     }
-    if (current_input_file.rfind(TEMP_FILE, 0) == 0) {
-        std::remove(current_input_file.c_str());
+    for (const auto &file : temp_files_to_cleanup) {
+        std::remove(file.c_str());
     }
     std::cout << "Конвертация успешно завершена. Результат сохранен в: " << output_file << std::endl;
 }
@@ -84,7 +88,7 @@ int convert(int argc, char *argv[]) {
         std::string config_file = argv[2];
         std::string output_file = argv[3];
         std::vector<std::string> input_files;
-        for (int i = 4; i < argc; ++i) {
+        for (int i = 4; i < argc; i++) {
             input_files.push_back(argv[i]);
         }
 
