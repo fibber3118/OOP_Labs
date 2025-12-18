@@ -14,7 +14,6 @@ void convert_c(
     const std::string &config_file,
     const std::string &output_file,
     const std::vector<std::string> &input_files) {
-
     if (input_files.empty()) {
         throw std::invalid_argument("Не задан входной WAV-файл.");
     }
@@ -53,17 +52,17 @@ void convert_c(
                 throw std::runtime_error("Неизвестный конвертер: " + converter_name);
             }
             WAV_Reader in_stream(current_input_file);
-                WAV_Writer out_stream(current_output_file);
-                converter->convert(in_stream, out_stream, args_string);
+            WAV_Writer out_stream(current_output_file);
+            converter->convert(in_stream, out_stream, args_string);
             current_input_file = current_output_file;
         }
     } catch (const std::exception &e) {
-        for (const auto &file : temp_files_to_cleanup) {
+        for (const auto &file: temp_files_to_cleanup) {
             std::remove(file.c_str());
         }
         throw;
     }
-    for (const auto &file : temp_files_to_cleanup) {
+    for (const auto &file: temp_files_to_cleanup) {
         std::remove(file.c_str());
     }
     std::cout << "Конвертация успешно завершена. Результат сохранен в: " << output_file << std::endl;
