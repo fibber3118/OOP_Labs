@@ -1,7 +1,7 @@
 #include "convert.h"
 
 void print_help() {
-    std::cout << "Usage: sound_processor [-h] [-c config.txt output.wav input1.wav [input2.wav ...]]" << std::endl;
+    std::cout << "Use: [-h] [-c config.txt output.wav input1.wav [input2.wav ...]]" << std::endl;
     std::cout << "  -h                  Show this help message and exit." << std::endl;
     std::cout << "  -c                  Configuration mode." << std::endl;
     std::cout << "\nConfiguration Format:" << std::endl;
@@ -10,7 +10,7 @@ void print_help() {
     std::cout << "  input1.wav" << std::endl;
 }
 
-void convert(
+void convert_c(
     const std::string &config_file,
     const std::string &output_file,
     const std::vector<std::string> &input_files) {
@@ -61,7 +61,7 @@ void convert(
         for (const auto &file : temp_files_to_cleanup) {
             std::remove(file.c_str());
         }
-        throw; // Пробрасываем ошибку дальше
+        throw;
     }
     for (const auto &file : temp_files_to_cleanup) {
         std::remove(file.c_str());
@@ -93,7 +93,7 @@ int convert(int argc, char *argv[]) {
         }
 
         try {
-            convert(config_file, output_file, input_files);
+            convert_c(config_file, output_file, input_files);
         } catch (const std::exception &e) {
             std::cerr << e.what() << std::endl;
             return 2;

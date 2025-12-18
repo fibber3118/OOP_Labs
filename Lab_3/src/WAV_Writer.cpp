@@ -14,7 +14,7 @@ WAV_Writer::WAV_Writer(const std::string& filename) {
 }
 
 void WAV_Writer::updateHeaderFields() {
-    data_chunk.data_size = (uint32_t)data_size_bytes;
+    data_chunk.data_size = static_cast<uint32_t>(data_size_bytes);
     header.chunkSize = sizeof(WavHeader) - 8 + sizeof(data_chunk) + data_size_bytes;
     header.byteRate = header.sampleRate * header.numChannels * bytes_per_sample;
     header.blockAlign = header.numChannels * bytes_per_sample;
