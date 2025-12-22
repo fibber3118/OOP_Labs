@@ -1,0 +1,8 @@
+Word. Word.
+test, test, test.
+Hyphenated-word, Hyphenated-word.
+Word.
+Comma, separated, list.
+"Quoted, words."
+(Parenthetical) remarks.
+Hyphenated-word.
